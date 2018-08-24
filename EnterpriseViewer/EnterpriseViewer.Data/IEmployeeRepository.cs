@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using EnterpriseViewer.Model;
 
 namespace EnterpriseViewer.Data
@@ -9,5 +10,6 @@ namespace EnterpriseViewer.Data
 		Employee GetEmployee(decimal employeeId);
 		void DeleteEmployee(decimal employeeId);
 		void UpdateEmployee(Employee employee);
+		IEnumerable<Employee> GetEmployeesFromDepartment(Guid departmentId);
 	}
 }

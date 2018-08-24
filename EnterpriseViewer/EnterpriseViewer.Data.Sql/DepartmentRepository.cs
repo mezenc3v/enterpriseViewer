@@ -105,8 +105,8 @@ namespace EnterpriseViewer.Data.Sql
 							return new Department
 							{
 								Id = reader.GetGuid(reader.GetOrdinal("ID")),
-								Name = reader.GetString(reader.GetOrdinal("Name")),
-								Code = reader.GetString(reader.GetOrdinal("Code")),
+								Name = reader[reader.GetOrdinal("Name")] as string,
+								Code = reader[reader.GetOrdinal("Code")] as string,
 								ParentId = reader["ParentDepartmentID"] as Guid?,
 							};
 						}

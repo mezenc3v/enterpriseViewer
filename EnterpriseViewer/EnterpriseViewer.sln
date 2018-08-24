@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseViewer.Data.Sql",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseViewer.Tests", "EnterpriseViewer.Tests\EnterpriseViewer.Tests.csproj", "{56A0DFFC-A11E-45E4-A4B3-D20CD74BFFE3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseViewer.WinForms", "EnterpriseViewer.WinForms\EnterpriseViewer.WinForms.csproj", "{B0E62939-FB8B-417D-B770-C3F8F0082073}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{56A0DFFC-A11E-45E4-A4B3-D20CD74BFFE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56A0DFFC-A11E-45E4-A4B3-D20CD74BFFE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56A0DFFC-A11E-45E4-A4B3-D20CD74BFFE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0E62939-FB8B-417D-B770-C3F8F0082073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0E62939-FB8B-417D-B770-C3F8F0082073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0E62939-FB8B-417D-B770-C3F8F0082073}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0E62939-FB8B-417D-B770-C3F8F0082073}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

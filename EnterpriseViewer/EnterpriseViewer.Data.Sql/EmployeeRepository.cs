@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using EnterpriseViewer.Model;
 using System.Data.SqlClient;
@@ -81,13 +82,13 @@ namespace EnterpriseViewer.Data.Sql
 							return new Employee
 							{
 								Id = reader.GetDecimal(reader.GetOrdinal("ID")),
-								FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-								Surname = reader.GetString(reader.GetOrdinal("SurName")),
-								Patronymic = reader.GetString(reader.GetOrdinal("Patronymic")),
+								FirstName = reader[reader.GetOrdinal("FirstName")] as string,
+								Surname = reader[reader.GetOrdinal("SurName")] as string,
+								Patronymic = reader[reader.GetOrdinal("Patronymic")] as string,
 								DateOfBirth = reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
-								DocSeries = reader.GetString(reader.GetOrdinal("DocSeries")),
-								DocNumber = reader.GetString(reader.GetOrdinal("DocNumber")),
-								Position = reader.GetString(reader.GetOrdinal("Position")),
+								DocSeries = reader[reader.GetOrdinal("DocSeries")] as string,
+								DocNumber = reader[reader.GetOrdinal("DocNumber")] as string,
+								Position = reader[reader.GetOrdinal("Position")] as string,
 								DepartmentId = reader.GetGuid(reader.GetOrdinal("DepartmentID"))
 							};
 						}
@@ -151,6 +152,42 @@ namespace EnterpriseViewer.Data.Sql
 					cmd.Parameters.AddWithValue("@DepartmentID", employee.DepartmentId);
 					cmd.Parameters.AddWithValue("@employeeId", employee.Id);
 					cmd.ExecuteNonQuery();
+				}
+			}
+			catch (Exception e)
+			{
+				Logger.Error(e);
+				throw;
+			}
+			finally
+			{
+				connection?.Dispose();
+			}
+		}
+
+		public IEnumerable<Employee> GetEmployeesFromDepartment(Guid departmentId)
+		{
+			var result = new List<Employee>();
+			SqlConnection connection = null;
+			try
+			{
+				connection = new SqlConnection(_connectionString);
+				connection.Open();
+				using (var cmd = connection.CreateCommand())
+				{
+					cmd.CommandText = "select ID from Empoyee where DepartmentID = @DepartmentID";
+					cmd.Parameters.AddWithValue("@DepartmentID", departmentId);
+					using (var reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							var employeeId = reader.GetDecimal(reader.GetOrdinal("ID"));
+							var employee = GetEmployee(employeeId);
+							result.Add(employee);
+						}
+					}
+
+					return result;
 				}
 			}
 			catch (Exception e)

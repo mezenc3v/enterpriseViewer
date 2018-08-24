@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using EnterpriseViewer.Model;
 using NUnit.Framework;
 
@@ -61,6 +63,27 @@ namespace EnterpriseViewer.Tests.SqlTests
 			EmployeesRepository.DeleteEmployee(addedEmployee.Id);
 			//asserts
 			Assert.Throws<ArgumentException>(() => { EmployeesRepository.GetEmployee(addedEmployee.Id); });
+		}
+
+		[Test]
+		public void ShouldGetEmloyeesFromDepartment()
+		{
+			//arrange
+			var depId = new Guid("6453b876-8b5f-48a7-b088-f526eb592752");
+			var employeesList = new List<Employee>();
+			for (int i = 0; i < 10; i++)
+			{
+				var emp = CreateTestEmployee();
+				var addedEmployee = EmployeesRepository.AddEmployee(emp);
+				AddEmployeeForClean(addedEmployee.Id);
+				addedEmployee.DepartmentId = depId;
+				employeesList.Add(addedEmployee);
+			}
+			//act
+			var employeesFromDb = EmployeesRepository.GetEmployeesFromDepartment(depId).ToList();
+			//asserts
+			employeesList.ForEach(employee => Assert.True(employeesFromDb.Any(e => e.Id == employee.Id)));
+			Assert.True(employeesFromDb.Count >= 10);
 		}
 
 		private static void EmployeesHaveTheDifferentFields(Employee firstEmployee, Employee secondEmployee)
