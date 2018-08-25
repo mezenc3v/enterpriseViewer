@@ -13,10 +13,9 @@ namespace EnterpriseViewer.Tests.SqlTests
 		public void ShouldAddNewEmployee()
 		{
 			//arrange
-			var newEmployee = CreateTestEmployee();
+			var newEmployee = CreateEmployee();
 			//act
-			var addedEmp = EmployeesRepository.AddEmployee(newEmployee);
-			AddEmployeeForClean(addedEmp.Id);
+			var addedEmp = UnitOfWork.EmployeeRepository.AddEmployee(newEmployee);
 			//assert
 			EmployeesHaveTheSameFields(newEmployee, addedEmp);
 		}
@@ -25,12 +24,11 @@ namespace EnterpriseViewer.Tests.SqlTests
 		public void ShouldGetEmployee()
 		{
 			//arrange
-			var employee = CreateTestEmployee();
-			var addedEmployee = EmployeesRepository.AddEmployee(employee);
-			AddEmployeeForClean(addedEmployee.Id);
+			var employee = CreateEmployee();
+			var addedEmployee = UnitOfWork.EmployeeRepository.AddEmployee(employee);
 			var wantedEmployeeId = addedEmployee.Id;
 			//act
-			var foundedEmployee = EmployeesRepository.GetEmployee(wantedEmployeeId);
+			var foundedEmployee = UnitOfWork.EmployeeRepository.GetEmployee(wantedEmployeeId);
 			//asserts
 			EmployeesHaveTheSameFields(employee, foundedEmployee);
 			Assert.AreEqual(wantedEmployeeId, foundedEmployee.Id);
@@ -40,14 +38,13 @@ namespace EnterpriseViewer.Tests.SqlTests
 		public void ShouldUpdateEmployee()
 		{
 			//arrange
-			var employee = CreateTestEmployee();
-			var addedEmployee = EmployeesRepository.AddEmployee(employee);
-			AddEmployeeForClean(addedEmployee.Id);
-			var originalEmployeeFromDb = EmployeesRepository.GetEmployee(addedEmployee.Id);
+			var employee = CreateEmployee();
+			var addedEmployee = UnitOfWork.EmployeeRepository.AddEmployee(employee);
+			var originalEmployeeFromDb = UnitOfWork.EmployeeRepository.GetEmployee(addedEmployee.Id);
 			UpdateTestEmployee(addedEmployee);
 			//act
-			EmployeesRepository.UpdateEmployee(addedEmployee);
-			var updatedEmployeeFromDb = EmployeesRepository.GetEmployee(addedEmployee.Id);
+			UnitOfWork.EmployeeRepository.UpdateEmployee(addedEmployee);
+			var updatedEmployeeFromDb = UnitOfWork.EmployeeRepository.GetEmployee(addedEmployee.Id);
 			//asserts
 			EmployeesHaveTheDifferentFields(originalEmployeeFromDb, updatedEmployeeFromDb);
 			Assert.AreEqual(originalEmployeeFromDb.Id, updatedEmployeeFromDb.Id);
@@ -57,12 +54,12 @@ namespace EnterpriseViewer.Tests.SqlTests
 		public void ShouldDeleteEmployee()
 		{
 			//arrange
-			var employee = CreateTestEmployee();
-			var addedEmployee = EmployeesRepository.AddEmployee(employee);
+			var employee = CreateEmployee();
+			var addedEmployee = UnitOfWork.EmployeeRepository.AddEmployee(employee);
 			//act
-			EmployeesRepository.DeleteEmployee(addedEmployee.Id);
+			UnitOfWork.EmployeeRepository.DeleteEmployee(addedEmployee.Id);
 			//asserts
-			Assert.Throws<ArgumentException>(() => { EmployeesRepository.GetEmployee(addedEmployee.Id); });
+			Assert.Throws<ArgumentException>(() => { UnitOfWork.EmployeeRepository.GetEmployee(addedEmployee.Id); });
 		}
 
 		[Test]
@@ -73,14 +70,13 @@ namespace EnterpriseViewer.Tests.SqlTests
 			var employeesList = new List<Employee>();
 			for (int i = 0; i < 10; i++)
 			{
-				var emp = CreateTestEmployee();
-				var addedEmployee = EmployeesRepository.AddEmployee(emp);
-				AddEmployeeForClean(addedEmployee.Id);
+				var emp = CreateEmployee();
+				var addedEmployee = UnitOfWork.EmployeeRepository.AddEmployee(emp);
 				addedEmployee.DepartmentId = depId;
 				employeesList.Add(addedEmployee);
 			}
 			//act
-			var employeesFromDb = EmployeesRepository.GetEmployeesFromDepartment(depId).ToList();
+			var employeesFromDb = UnitOfWork.EmployeeRepository.GetEmployeesFromDepartment(depId).ToList();
 			//asserts
 			employeesList.ForEach(employee => Assert.True(employeesFromDb.Any(e => e.Id == employee.Id)));
 			Assert.True(employeesFromDb.Count >= 10);
@@ -118,21 +114,6 @@ namespace EnterpriseViewer.Tests.SqlTests
 			testEmployee.DocSeries = "NewD";
 			testEmployee.Position = "NewPosition";
 			testEmployee.DepartmentId = new Guid("c17ac66a-88a5-462f-83ac-c447de599838");
-		}
-
-		private static Employee CreateTestEmployee()
-		{
-			return new Employee
-			{
-				FirstName = "TestFirstName",
-				Surname = "TestSurName",
-				Patronymic = "TestPatrName",
-				DateOfBirth = new DateTime(1994, 10, 31),
-				DepartmentId = new Guid("6453b876-8b5f-48a7-b088-f526eb592752"),
-				DocNumber = "123",
-				DocSeries = "456",
-				Position = "TestPos"
-			};
 		}
 	}
 }

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using EnterpriseViewer.Model;
+using System;
 using System.Collections.Generic;
-using EnterpriseViewer.Model;
 
 namespace EnterpriseViewer.Data
 {

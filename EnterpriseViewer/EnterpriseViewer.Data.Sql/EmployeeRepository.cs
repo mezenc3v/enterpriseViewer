@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using EnterpriseViewer.Model;
-using System.Data.SqlClient;
 using NLog;
 
 namespace EnterpriseViewer.Data.Sql
@@ -10,15 +9,14 @@ namespace EnterpriseViewer.Data.Sql
 	public class EmployeeRepository : IEmployeeRepository
 	{
 		internal static ILogger Logger = LogManager.GetCurrentClassLogger();
-		private readonly string _connectionString;
-		public EmployeeRepository(string connectionString)
+		private readonly AdoNetContext _context;
+		public EmployeeRepository(AdoNetContext context)
 		{
-			_connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+			_context = context ?? throw new ArgumentNullException(nameof(context));
 		}
 
 		public Employee AddEmployee(Employee employee)
 		{
-			SqlConnection connection = null;
 			try
 			{
 				var newEmployee = new Employee
@@ -33,9 +31,7 @@ namespace EnterpriseViewer.Data.Sql
 					DepartmentId = employee.DepartmentId
 				};
 
-				connection = new SqlConnection(_connectionString);
-				connection.Open();
-				using (var cmd = connection.CreateCommand())
+				using (var cmd = _context.CreateCommand())
 				{
 					cmd.CommandText = @"insert into Empoyee values (@FirstName,@SurName,@Patronymic,@DateOfBirth,@DocSeries,@DocNumber,@Position,@DepartmentID); SET @ID = SCOPE_IDENTITY()";
 					cmd.Parameters.Add("@ID", SqlDbType.Int, 5).Direction = ParameterDirection.Output;
@@ -57,21 +53,13 @@ namespace EnterpriseViewer.Data.Sql
 				Logger.Error(e);
 				throw;
 			}
-			finally
-			{
-				connection?.Dispose();
-			}
 		}
 
 		public Employee GetEmployee(decimal employeeId)
 		{
-			SqlConnection connection = null;
-
 			try
 			{
-				connection = new SqlConnection(_connectionString);
-				connection.Open();
-				using (var command = connection.CreateCommand())
+				using (var command = _context.CreateCommand())
 				{
 					command.CommandText = "select ID, FirstName, SurName, Patronymic, DateOfBirth, DocSeries, DocNumber, Position, DepartmentID from Empoyee where ID = @employeeId;";
 					command.Parameters.AddWithValue("@employeeId", employeeId);
@@ -79,7 +67,7 @@ namespace EnterpriseViewer.Data.Sql
 					{
 						while (reader.Read())
 						{
-							return new Employee
+							var employee = new Employee
 							{
 								Id = reader.GetDecimal(reader.GetOrdinal("ID")),
 								FirstName = reader[reader.GetOrdinal("FirstName")] as string,
@@ -91,7 +79,9 @@ namespace EnterpriseViewer.Data.Sql
 								Position = reader[reader.GetOrdinal("Position")] as string,
 								DepartmentId = reader.GetGuid(reader.GetOrdinal("DepartmentID"))
 							};
+							return employee;
 						}
+
 					}
 					throw new ArgumentException($"{nameof(Employee)} with id {employeeId} not found");
 				}
@@ -101,20 +91,13 @@ namespace EnterpriseViewer.Data.Sql
 				Logger.Error(e);
 				throw;
 			}
-			finally
-			{
-				connection?.Dispose();
-			}
 		}
 
 		public void DeleteEmployee(decimal employeeId)
 		{
-			SqlConnection connection = null;
 			try
 			{
-				connection = new SqlConnection(_connectionString);
-				connection.Open();
-				using (var cmd = connection.CreateCommand())
+				using (var cmd = _context.CreateCommand())
 				{
 					cmd.CommandText = "delete from Empoyee where ID = @employeeId";
 					cmd.Parameters.AddWithValue("@employeeId", employeeId);
@@ -126,20 +109,13 @@ namespace EnterpriseViewer.Data.Sql
 				Logger.Error(e);
 				throw;
 			}
-			finally
-			{
-				connection?.Dispose();
-			}
 		}
 
 		public void UpdateEmployee(Employee employee)
 		{
-			SqlConnection connection = null;
 			try
 			{
-				connection = new SqlConnection(_connectionString);
-				connection.Open();
-				using (var cmd = connection.CreateCommand())
+				using (var cmd = _context.CreateCommand())
 				{
 					cmd.CommandText = "update Empoyee set FirstName = @FirstName, SurName = @SurName, Patronymic = @Patronymic, DateOfBirth = @DateOfBirth, DocSeries = @DocSeries, DocNumber = @DocNumber, Position = @Position, DepartmentID = @DepartmentID from Empoyee where ID = @employeeId;";
 					cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
@@ -159,21 +135,15 @@ namespace EnterpriseViewer.Data.Sql
 				Logger.Error(e);
 				throw;
 			}
-			finally
-			{
-				connection?.Dispose();
-			}
 		}
 
 		public IEnumerable<Employee> GetEmployeesFromDepartment(Guid departmentId)
 		{
+			var employeeIds = new List<decimal>();
 			var result = new List<Employee>();
-			SqlConnection connection = null;
 			try
 			{
-				connection = new SqlConnection(_connectionString);
-				connection.Open();
-				using (var cmd = connection.CreateCommand())
+				using (var cmd = _context.CreateCommand())
 				{
 					cmd.CommandText = "select ID from Empoyee where DepartmentID = @DepartmentID";
 					cmd.Parameters.AddWithValue("@DepartmentID", departmentId);
@@ -182,22 +152,22 @@ namespace EnterpriseViewer.Data.Sql
 						while (reader.Read())
 						{
 							var employeeId = reader.GetDecimal(reader.GetOrdinal("ID"));
-							var employee = GetEmployee(employeeId);
-							result.Add(employee);
+							employeeIds.Add(employeeId);
 						}
 					}
-
-					return result;
 				}
+
+				foreach (var employeeId in employeeIds)
+				{
+					var employee = GetEmployee(employeeId);
+					result.Add(employee);
+				}
+				return result;
 			}
 			catch (Exception e)
 			{
 				Logger.Error(e);
 				throw;
-			}
-			finally
-			{
-				connection?.Dispose();
 			}
 		}
 	}

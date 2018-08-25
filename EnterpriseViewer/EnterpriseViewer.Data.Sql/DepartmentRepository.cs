@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using EnterpriseViewer.Model;
-using System.Data.SqlClient;
 using NLog;
 
 namespace EnterpriseViewer.Data.Sql
@@ -9,21 +8,19 @@ namespace EnterpriseViewer.Data.Sql
 	public class DepartmentRepository : IDepartmentRepository
 	{
 		internal static ILogger Logger = LogManager.GetCurrentClassLogger();
-		private readonly string _connectionString;
-		public DepartmentRepository(string connectionString)
+		private readonly AdoNetContext _context;
+		public DepartmentRepository(AdoNetContext context)
 		{
-			_connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+			_context = context ?? throw new ArgumentNullException(nameof(context));
 		}
 
 		public IEnumerable<Department> GetAllDepartments()
 		{
+			var departmentIds = new List<Guid>();
 			var result = new List<Department>();
-			SqlConnection connection = null;
 			try
 			{
-				connection = new SqlConnection(_connectionString);
-				connection.Open();
-				using (var command = connection.CreateCommand())
+				using (var command = _context.CreateCommand())
 				{
 					command.CommandText = "select ID from Department";
 					using (var reader = command.ExecuteReader())
@@ -31,28 +28,28 @@ namespace EnterpriseViewer.Data.Sql
 						while (reader.Read())
 						{
 							var departmentId = reader.GetGuid(reader.GetOrdinal("ID"));
-							var department = GetDepartment(departmentId);
-							result.Add(department);
+							departmentIds.Add(departmentId);
 						}
 					}
-
-					return result;
 				}
+
+				foreach (var departmentId in departmentIds)
+				{
+					var department = GetDepartment(departmentId);
+					result.Add(department);
+				}
+
+				return result;
 			}
 			catch (Exception e)
 			{
 				Logger.Error(e);
 				throw;
 			}
-			finally
-			{
-				connection?.Dispose();
-			}
 		}
 
 		public Department AddDepartment(Department department)
 		{
-			SqlConnection connection = null;
 			try
 			{
 				var newDepartment = new Department
@@ -60,12 +57,10 @@ namespace EnterpriseViewer.Data.Sql
 					Id = department.Id,
 					Name = department.Name,
 					Code = department.Code,
-					ParentId = department.ParentId,
+					ParentId = department.ParentId
 				};
 
-				connection = new SqlConnection(_connectionString);
-				connection.Open();
-				using (var cmd = connection.CreateCommand())
+				using (var cmd = _context.CreateCommand())
 				{
 					cmd.CommandText = @"insert into Department values (@ID,@Name,@Code,@ParentDepartmentID);";
 					cmd.Parameters.AddWithValue("@ID", newDepartment.Id);
@@ -81,20 +76,13 @@ namespace EnterpriseViewer.Data.Sql
 				Logger.Error(e);
 				throw;
 			}
-			finally
-			{
-				connection?.Dispose();
-			}
 		}
 
 		public Department GetDepartment(Guid departmentId)
 		{
-			SqlConnection connection = null;
 			try
 			{
-				connection = new SqlConnection(_connectionString);
-				connection.Open();
-				using (var command = connection.CreateCommand())
+				using (var command = _context.CreateCommand())
 				{
 					command.CommandText = "select ID, Name, Code, ParentDepartmentID from Department where ID = @departmentId;";
 					command.Parameters.AddWithValue("@departmentId", departmentId);
@@ -102,13 +90,14 @@ namespace EnterpriseViewer.Data.Sql
 					{
 						while (reader.Read())
 						{
-							return new Department
+							var newDep = new Department
 							{
 								Id = reader.GetGuid(reader.GetOrdinal("ID")),
 								Name = reader[reader.GetOrdinal("Name")] as string,
 								Code = reader[reader.GetOrdinal("Code")] as string,
-								ParentId = reader["ParentDepartmentID"] as Guid?,
+								ParentId = reader["ParentDepartmentID"] as Guid?
 							};
+							return newDep;
 						}
 					}
 					throw new ArgumentException($"{nameof(Department)} with id {departmentId} not found");
@@ -119,20 +108,13 @@ namespace EnterpriseViewer.Data.Sql
 				Logger.Error(e);
 				throw;
 			}
-			finally
-			{
-				connection?.Dispose();
-			}
 		}
 
 		public void DeleteDepartment(Guid departmentId)
 		{
-			SqlConnection connection = null;
 			try
 			{
-				connection = new SqlConnection(_connectionString);
-				connection.Open();
-				using (var cmd = connection.CreateCommand())
+				using (var cmd = _context.CreateCommand())
 				{
 					cmd.CommandText = "delete from Department where ID = @departmentId";
 					cmd.Parameters.AddWithValue("@departmentId", departmentId);
@@ -144,20 +126,13 @@ namespace EnterpriseViewer.Data.Sql
 				Logger.Error(e);
 				throw;
 			}
-			finally
-			{
-				connection?.Dispose();
-			}
 		}
 
 		public void UpdateDepartment(Department department)
 		{
-			SqlConnection connection = null;
 			try
 			{
-				connection = new SqlConnection(_connectionString);
-				connection.Open();
-				using (var cmd = connection.CreateCommand())
+				using (var cmd = _context.CreateCommand())
 				{
 					cmd.CommandText = "update Department set Name = @Name, Code = @Code, ParentDepartmentID = @ParentDepartmentID from Department where ID = @departmentId;";
 					cmd.Parameters.AddWithValue("@Name", department.Name);
@@ -171,10 +146,6 @@ namespace EnterpriseViewer.Data.Sql
 			{
 				Logger.Error(e);
 				throw;
-			}
-			finally
-			{
-				connection?.Dispose();
 			}
 		}
 	}

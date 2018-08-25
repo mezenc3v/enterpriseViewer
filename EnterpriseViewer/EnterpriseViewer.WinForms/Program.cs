@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EnterpriseViewer.WinForms
@@ -16,9 +13,11 @@ namespace EnterpriseViewer.WinForms
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			var controller = new Controller(RepositoriesFactory.CreateDepartmentRepository(), RepositoriesFactory.CreateEmployeeRepository());
+			var unitOfWork = UnitOfWorkFactory.CreateUnitOfWork();
+			var controller = new Controller(unitOfWork);
+			var departments = controller.GetDepartments();
 			var form = new StartForm();
-			form.SetDepartments(controller.GetDepartments());
+			form.SetDepartments(departments);
 			Application.Run(form);
 		}
 	}

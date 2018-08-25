@@ -42,11 +42,12 @@
   <ItemGroup>
     <Compile Include="IDepartmentRepository.cs" />
     <Compile Include="IEmployeeRepository.cs" />
+    <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnterpriseViewer.Model\EnterpriseViewer.Model.csproj">
-      <Project>{597e210b-686d-4690-9ca0-94ed29806a1c}</Project>
+      <Project>{597E210B-686D-4690-9CA0-94ED29806A1C}</Project>
       <Name>EnterpriseViewer.Model</Name>
     </ProjectReference>
   </ItemGroup>

@@ -2,6 +2,7 @@
 using System;
 using EnterpriseViewer.Data;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using EnterpriseViewer.WinForms.Annotations;
 using EnterpriseViewer.WinForms.Presenters;
@@ -12,27 +13,42 @@ namespace EnterpriseViewer.WinForms
 	{
 		private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-		private readonly IDepartmentRepository _departmentRepo;
-		private readonly IEmployeeRepository _employeeRepo;
+		private readonly IUnitOfWork _unitOfWork;
 
-		public Controller([NotNull] IDepartmentRepository departmentRepo, [NotNull] IEmployeeRepository employeeRepo)
+		public Controller([NotNull] IUnitOfWork unitOfWork)
 		{
-			_departmentRepo = departmentRepo ?? throw new ArgumentNullException(nameof(departmentRepo));
-			_employeeRepo = employeeRepo ?? throw new ArgumentNullException(nameof(employeeRepo));
+			_unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
 		}
 
 		public IEnumerable<DepartmentView> GetDepartments()
 		{
 			var depViews = new List<DepartmentView>();
-			var departments = _departmentRepo.GetAllDepartments();
+			var departments = _unitOfWork.DepartmentRepository.GetAllDepartments();
 			foreach (var department in departments)
 			{
-				var employeeViews = _employeeRepo.GetEmployeesFromDepartment(department.Id).Select(e => new EmployeeView(e));
+				var employees = _unitOfWork.EmployeeRepository.GetEmployeesFromDepartment(department.Id);
+				var employeeViews = employees.Select(e => new EmployeeView(e)).ToList();
+				employeeViews.ForEach(ev =>
+				{
+					ev.PropertyChanged += PropertyChangedHandler;
+				});
+
 				var depView = new DepartmentView(department, employeeViews);
+				depView.PropertyChanged += PropertyChangedHandler;
 				depViews.Add(depView);
 			}
 
 			return depViews;
+		}
+
+		public void SaveChanges()
+		{
+			_unitOfWork.Commit();
+		}
+
+		private static void PropertyChangedHandler(object sender, PropertyChangedEventArgs args)
+		{
+			
 		}
 	}
 }

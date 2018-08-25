@@ -13,10 +13,9 @@ namespace EnterpriseViewer.Tests.SqlTests
 		public void ShouldAddDepartment()
 		{
 			//act
-			var newDepartment = CreateTestDepartment();
+			var newDepartment = CreateDepartment();
 			//arrange
-			var addedDepartment = DepartmentsRepository.AddDepartment(newDepartment);
-			AddDepartmentForClean(addedDepartment.Id);
+			var addedDepartment = UnitOfWork.DepartmentRepository.AddDepartment(newDepartment);
 			//asserts
 			DepartmentsHaveTheSameFields(newDepartment, addedDepartment);
 		}
@@ -25,12 +24,11 @@ namespace EnterpriseViewer.Tests.SqlTests
 		public void ShouldGetDepartment()
 		{
 			//arrange
-			var department = CreateTestDepartment();
-			var addedDepartment = DepartmentsRepository.AddDepartment(department);
-			AddDepartmentForClean(addedDepartment.Id);
+			var department = CreateDepartment();
+			var addedDepartment = UnitOfWork.DepartmentRepository.AddDepartment(department);
 			var wantedDepartmentId = addedDepartment.Id;
 			//act
-			var foundedDepartment = DepartmentsRepository.GetDepartment(wantedDepartmentId);
+			var foundedDepartment = UnitOfWork.DepartmentRepository.GetDepartment(wantedDepartmentId);
 			//asserts
 			DepartmentsHaveTheSameFields(department, foundedDepartment);
 			Assert.AreEqual(wantedDepartmentId, foundedDepartment.Id);
@@ -40,14 +38,13 @@ namespace EnterpriseViewer.Tests.SqlTests
 		public void ShouldUpdateDepartment()
 		{
 			//arrange
-			var department = CreateTestDepartment();
-			var addedDepartment = DepartmentsRepository.AddDepartment(department);
-			AddDepartmentForClean(addedDepartment.Id);
-			var originalDepartmentFromDb = DepartmentsRepository.GetDepartment(addedDepartment.Id);
+			var department = CreateDepartment();
+			var addedDepartment = UnitOfWork.DepartmentRepository.AddDepartment(department);
+			var originalDepartmentFromDb = UnitOfWork.DepartmentRepository.GetDepartment(addedDepartment.Id);
 			UpdateTestDepartment(addedDepartment);
 			//act
-			DepartmentsRepository.UpdateDepartment(addedDepartment);
-			var updatedDepartmentFromDb = DepartmentsRepository.GetDepartment(addedDepartment.Id);
+			UnitOfWork.DepartmentRepository.UpdateDepartment(addedDepartment);
+			var updatedDepartmentFromDb = UnitOfWork.DepartmentRepository.GetDepartment(addedDepartment.Id);
 			//asserts
 			DepartmentsHaveTheDifferentFields(originalDepartmentFromDb, updatedDepartmentFromDb);
 			Assert.AreEqual(originalDepartmentFromDb.Id, updatedDepartmentFromDb.Id);
@@ -57,12 +54,12 @@ namespace EnterpriseViewer.Tests.SqlTests
 		public void ShouldDeleteDepartment()
 		{
 			//arrange
-			var department = CreateTestDepartment();
-			var addedDepartment = DepartmentsRepository.AddDepartment(department);
+			var department = CreateDepartment();
+			var addedDepartment = UnitOfWork.DepartmentRepository.AddDepartment(department);
 			//act
-			DepartmentsRepository.DeleteDepartment(department.Id);
+			UnitOfWork.DepartmentRepository.DeleteDepartment(department.Id);
 			//asserts
-			Assert.Throws<ArgumentException>(() => { DepartmentsRepository.GetDepartment(addedDepartment.Id); });
+			Assert.Throws<ArgumentException>(() => { UnitOfWork.DepartmentRepository.GetDepartment(addedDepartment.Id); });
 		}
 
 		[Test]
@@ -72,13 +69,12 @@ namespace EnterpriseViewer.Tests.SqlTests
 			var departmentsList = new List<Department>();
 			for (int i = 0; i < 10; i++)
 			{
-				var department = CreateTestDepartment();
-				var addedDepartment = DepartmentsRepository.AddDepartment(department);
+				var department = CreateDepartment();
+				var addedDepartment = UnitOfWork.DepartmentRepository.AddDepartment(department);
 				departmentsList.Add(addedDepartment);
-				AddDepartmentForClean(addedDepartment.Id);
 			}
 			//act
-			var departments = DepartmentsRepository.GetAllDepartments().ToList();
+			var departments = UnitOfWork.DepartmentRepository.GetAllDepartments().ToList();
 			//asserts
 			departmentsList.ForEach(dep => Assert.True(departments.Any(d => d.Id == dep.Id)));
 			Assert.True(departments.Count >= 10);
@@ -103,17 +99,6 @@ namespace EnterpriseViewer.Tests.SqlTests
 			testDepatrment.Name = "NewName";
 			testDepatrment.Code = "NewCode";
 			testDepatrment.ParentId = new Guid("c17ac66a-88a5-462f-83ac-c447de599838");
-		}
-
-		private static Department CreateTestDepartment()
-		{
-			return new Department
-			{
-				Id = Guid.NewGuid(),
-				Name = "TestName",
-				Code = "TestCode",
-				ParentId = new Guid("6453b876-8b5f-48a7-b088-f526eb592752"),
-			};
 		}
 	}
 }

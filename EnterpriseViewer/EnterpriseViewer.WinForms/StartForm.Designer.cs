@@ -72,27 +72,27 @@
 			this.layoutControl1.Name = "layoutControl1";
 			this.layoutControl1.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new System.Drawing.Rectangle(539, 85, 650, 400);
 			this.layoutControl1.Root = this.layoutControlGroup1;
-			this.layoutControl1.Size = new System.Drawing.Size(484, 311);
+			this.layoutControl1.Size = new System.Drawing.Size(684, 361);
 			this.layoutControl1.TabIndex = 0;
 			this.layoutControl1.Text = "layoutControl1";
 			// 
 			// panel2
 			// 
 			this.panel2.Controls.Add(this.employeeListBox);
-			this.panel2.Location = new System.Drawing.Point(333, 12);
+			this.panel2.Location = new System.Drawing.Point(469, 12);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(139, 287);
+			this.panel2.Size = new System.Drawing.Size(203, 337);
 			this.panel2.TabIndex = 5;
 			// 
 			// employeeListBox
 			// 
 			this.employeeListBox.DataSource = this.employeesBindingSource;
-			this.employeeListBox.DisplayMember = "FirstName";
+			this.employeeListBox.DisplayMember = "FullName";
 			this.employeeListBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.employeeListBox.FormattingEnabled = true;
 			this.employeeListBox.Location = new System.Drawing.Point(0, 0);
 			this.employeeListBox.Name = "employeeListBox";
-			this.employeeListBox.Size = new System.Drawing.Size(139, 287);
+			this.employeeListBox.Size = new System.Drawing.Size(203, 337);
 			this.employeeListBox.TabIndex = 0;
 			// 
 			// panel1
@@ -100,7 +100,7 @@
 			this.panel1.Controls.Add(this.departmentTreeList);
 			this.panel1.Location = new System.Drawing.Point(12, 12);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(312, 287);
+			this.panel1.Size = new System.Drawing.Size(448, 337);
 			this.panel1.TabIndex = 4;
 			// 
 			// departmentTreeList
@@ -116,7 +116,7 @@
 			this.departmentTreeList.Name = "departmentTreeList";
 			this.departmentTreeList.OptionsBehavior.EditorShowMode = DevExpress.XtraTreeList.TreeListEditorShowMode.DoubleClick;
 			this.departmentTreeList.ParentFieldName = "ParentId";
-			this.departmentTreeList.Size = new System.Drawing.Size(312, 287);
+			this.departmentTreeList.Size = new System.Drawing.Size(448, 337);
 			this.departmentTreeList.TabIndex = 0;
 			this.departmentTreeList.FocusedNodeChanged += new DevExpress.XtraTreeList.FocusedNodeChangedEventHandler(this.departmentTreeList_FocusedNodeChanged);
 			// 
@@ -143,7 +143,7 @@
             this.layoutControlItem2,
             this.splitterItem1});
 			this.layoutControlGroup1.Name = "Root";
-			this.layoutControlGroup1.Size = new System.Drawing.Size(484, 311);
+			this.layoutControlGroup1.Size = new System.Drawing.Size(684, 361);
 			this.layoutControlGroup1.TextVisible = false;
 			// 
 			// layoutControlItem1
@@ -152,7 +152,7 @@
 			this.layoutControlItem1.Location = new System.Drawing.Point(0, 0);
 			this.layoutControlItem1.MinSize = new System.Drawing.Size(104, 24);
 			this.layoutControlItem1.Name = "layoutControlItem1";
-			this.layoutControlItem1.Size = new System.Drawing.Size(316, 291);
+			this.layoutControlItem1.Size = new System.Drawing.Size(452, 341);
 			this.layoutControlItem1.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
 			this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
 			this.layoutControlItem1.TextVisible = false;
@@ -160,24 +160,24 @@
 			// layoutControlItem2
 			// 
 			this.layoutControlItem2.Control = this.panel2;
-			this.layoutControlItem2.Location = new System.Drawing.Point(321, 0);
+			this.layoutControlItem2.Location = new System.Drawing.Point(457, 0);
 			this.layoutControlItem2.Name = "layoutControlItem2";
-			this.layoutControlItem2.Size = new System.Drawing.Size(143, 291);
+			this.layoutControlItem2.Size = new System.Drawing.Size(207, 341);
 			this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
 			this.layoutControlItem2.TextVisible = false;
 			// 
 			// splitterItem1
 			// 
 			this.splitterItem1.AllowHotTrack = true;
-			this.splitterItem1.Location = new System.Drawing.Point(316, 0);
+			this.splitterItem1.Location = new System.Drawing.Point(452, 0);
 			this.splitterItem1.Name = "splitterItem1";
-			this.splitterItem1.Size = new System.Drawing.Size(5, 291);
+			this.splitterItem1.Size = new System.Drawing.Size(5, 341);
 			// 
 			// StartForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(484, 311);
+			this.ClientSize = new System.Drawing.Size(684, 361);
 			this.Controls.Add(this.layoutControl1);
 			this.Name = "StartForm";
 			this.Text = "Enterprise viewer";

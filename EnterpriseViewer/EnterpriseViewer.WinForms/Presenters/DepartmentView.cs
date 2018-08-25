@@ -23,13 +23,21 @@ namespace EnterpriseViewer.WinForms.Presenters
 		public string Name
 		{
 			get => _department.Name;
-			set => _department.Name = value;
+			set
+			{
+				_department.Name = value;
+				OnPropertyChanged(nameof(Name));
+			}
 		}
 
 		public string Code
 		{
 			get => _department.Code;
-			set => _department.Code = value;
+			set
+			{
+				_department.Code = value;
+				OnPropertyChanged(nameof(Code));
+			}
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

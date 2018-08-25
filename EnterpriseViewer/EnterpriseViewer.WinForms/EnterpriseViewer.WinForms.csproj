@@ -66,7 +66,7 @@
     <Compile Include="Presenters\DepartmentView.cs" />
     <Compile Include="Presenters\EmployeeView.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="RepositoriesFactory.cs" />
+    <Compile Include="UnitOfWorkFactory.cs" />
     <Compile Include="StartForm.cs">
       <SubType>Form</SubType>
     </Compile>

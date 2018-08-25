@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using EnterpriseViewer.Data;
 using EnterpriseViewer.Data.Sql;
+using EnterpriseViewer.Model;
 using NLog;
 using NUnit.Framework;
 
@@ -12,12 +11,7 @@ namespace EnterpriseViewer.Tests.SqlTests
 	[TestFixture]
 	public class BaseSqlTests
 	{
-		private static readonly List<Guid> DepartmentsForRemoval = new List<Guid>();
-		private static readonly List<decimal> EmployeesForRemoval = new List<decimal>();
-
-		private readonly string _connectionString;
-		protected readonly IEmployeeRepository EmployeesRepository;
-		protected readonly IDepartmentRepository DepartmentsRepository;
+		protected readonly IUnitOfWork UnitOfWork;
 		internal static ILogger Logger = LogManager.GetCurrentClassLogger();
 
 		public BaseSqlTests() : this(ConfigurationManager.ConnectionStrings["TestDb"].ConnectionString)
@@ -25,9 +19,7 @@ namespace EnterpriseViewer.Tests.SqlTests
 		}
 		public BaseSqlTests(string connectionString)
 		{
-			_connectionString = connectionString;
-			EmployeesRepository = new EmployeeRepository(_connectionString);
-			DepartmentsRepository = new DepartmentRepository(_connectionString);
+			UnitOfWork = new SqlUnitOfWork(connectionString);
 		}
 
 		[OneTimeSetUp]
@@ -38,48 +30,33 @@ namespace EnterpriseViewer.Tests.SqlTests
 		[OneTimeTearDown]
 		public void Clean()
 		{
-			CleanEmployees();
-			CleanDepartments();
+			UnitOfWork.Dispose();
 		}
 
-		protected void AddEmployeeForClean(decimal employeeId)
+		public Employee CreateEmployee()
 		{
-			EmployeesForRemoval.Add(employeeId);
-		}
-
-		protected void AddDepartmentForClean(Guid depatrmentId)
-		{
-			DepartmentsForRemoval.Add(depatrmentId);
-		}
-
-		private void CleanEmployees()
-		{
-			foreach (var employeeId in EmployeesForRemoval.Distinct())
+			return new Employee
 			{
-				try
-				{
-					EmployeesRepository.DeleteEmployee(employeeId);
-				}
-				catch (Exception e)
-				{
-					Logger.Trace(e, $"Cannot remove test employee with id {employeeId}");
-				}
-			}
+				FirstName = "TestFirstName",
+				Surname = "TestSurName",
+				Patronymic = "TestPatrName",
+				DateOfBirth = new DateTime(1994, 10, 31),
+				DepartmentId = new Guid("6453b876-8b5f-48a7-b088-f526eb592752"),
+				DocNumber = "123",
+				DocSeries = "456",
+				Position = "TestPos"
+			};
 		}
 
-		private void CleanDepartments()
+		public Department CreateDepartment()
 		{
-			foreach (var departmentId in DepartmentsForRemoval.Distinct())
+			return new Department
 			{
-				try
-				{
-					DepartmentsRepository.DeleteDepartment(departmentId);
-				}
-				catch (Exception e)
-				{
-					Logger.Trace(e, $"Cannot remove test department with id {departmentId}");
-				}
-			}
+				Id = Guid.NewGuid(),
+				Name = "TestName",
+				Code = "TestCode",
+				ParentId = new Guid("6453b876-8b5f-48a7-b088-f526eb592752"),
+			};
 		}
 	}
 }
