@@ -1,9 +1,9 @@
 ﻿using NLog;
 using System;
-using EnterpriseViewer.Data;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
+using EnterpriseViewer.Data;
+using System.ComponentModel;
+using System.Collections.Generic;
 using EnterpriseViewer.WinForms.Annotations;
 using EnterpriseViewer.WinForms.Presenters;
 
@@ -12,15 +12,16 @@ namespace EnterpriseViewer.WinForms
 	public class Controller
 	{
 		private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
 		private readonly IUnitOfWork _unitOfWork;
+		private IEnumerable<DepartmentView> _departmentViews;
+		public IEnumerable<DepartmentView> Departments => _departmentViews ?? (_departmentViews = GetDepartments());
 
 		public Controller([NotNull] IUnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
 		}
 
-		public IEnumerable<DepartmentView> GetDepartments()
+		private IEnumerable<DepartmentView> GetDepartments()
 		{
 			var depViews = new List<DepartmentView>();
 			var departments = _unitOfWork.DepartmentRepository.GetAllDepartments();
@@ -46,9 +47,24 @@ namespace EnterpriseViewer.WinForms
 			_unitOfWork.Commit();
 		}
 
-		private static void PropertyChangedHandler(object sender, PropertyChangedEventArgs args)
+		public void Undo()
 		{
-			
+			_unitOfWork.Undo();
+			_departmentViews = null;
+		}
+
+		private void PropertyChangedHandler(object sender, PropertyChangedEventArgs args)
+		{
+			switch (sender)
+			{
+				case EmployeeView emp:
+					 _unitOfWork.EmployeeRepository.UpdateEmployee(emp.Employee);
+					break;
+				case DepartmentView dep:
+					_unitOfWork.DepartmentRepository.UpdateDepartment(dep.Department);
+					break;
+				
+			}
 		}
 	}
 }

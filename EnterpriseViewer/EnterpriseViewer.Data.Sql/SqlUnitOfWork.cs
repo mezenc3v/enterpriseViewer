@@ -24,6 +24,11 @@ namespace EnterpriseViewer.Data.Sql
 			_context.SaveChanges();
 		}
 
+		public void Undo()
+		{
+			_context.Undo();
+		}
+
 		#region IDisposable Support
 		private bool _disposedValue;
 

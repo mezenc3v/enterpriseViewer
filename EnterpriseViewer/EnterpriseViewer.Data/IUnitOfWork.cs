@@ -7,5 +7,6 @@ namespace EnterpriseViewer.Data
 		IEmployeeRepository EmployeeRepository { get; }
 		IDepartmentRepository DepartmentRepository { get; }
 		void Commit();
+		void Undo();
 	}
 }

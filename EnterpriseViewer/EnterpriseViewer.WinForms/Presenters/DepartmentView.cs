@@ -7,35 +7,36 @@ namespace EnterpriseViewer.WinForms.Presenters
 {
 	public class DepartmentView : INotifyPropertyChanged
 	{
-		private readonly Department _department;
 		public DepartmentView(Department department, IEnumerable<EmployeeView> employees)
 		{
-			_department = department ?? throw new ArgumentNullException(nameof(department));
+			Department = department ?? throw new ArgumentNullException(nameof(department));
 			Employees = employees ?? throw new ArgumentNullException(nameof(employees));
 		}
 
+		public Department Department { get; }
+
 		public IEnumerable<EmployeeView> Employees { get; }
 
-		public Guid Id => _department.Id;
+		public Guid Id => Department.Id;
 
-		public Guid? ParentId => _department.ParentId;
+		public Guid? ParentId => Department.ParentId;
 
 		public string Name
 		{
-			get => _department.Name;
+			get => Department.Name;
 			set
 			{
-				_department.Name = value;
+				Department.Name = value;
 				OnPropertyChanged(nameof(Name));
 			}
 		}
 
 		public string Code
 		{
-			get => _department.Code;
+			get => Department.Code;
 			set
 			{
-				_department.Code = value;
+				Department.Code = value;
 				OnPropertyChanged(nameof(Code));
 			}
 		}

@@ -6,88 +6,88 @@ namespace EnterpriseViewer.WinForms.Presenters
 {
 	public class EmployeeView : INotifyPropertyChanged
 	{
-		private readonly Employee _employee;
-
 		public EmployeeView(Employee employee)
 		{
-			_employee = employee ?? throw new ArgumentNullException(nameof(employee));
+			Employee = employee ?? throw new ArgumentNullException(nameof(employee));
 		}
 
-		public decimal Id => _employee.Id;
+		public Employee Employee { get; }
+
+		public decimal Id => Employee.Id;
 
 		public string FullName => $"{Surname} {FirstName} {Patronymic}";
 
 		public string FirstName
 		{
-			get => _employee.FirstName;
+			get => Employee.FirstName;
 			set
 			{
-				_employee.FirstName = value;
+				Employee.FirstName = value;
 				OnPropertyChanged(nameof(FirstName));
 			}
 		}
 
 		public string Surname
 		{
-			get => _employee.Surname;
+			get => Employee.Surname;
 			set
 			{
-				_employee.Surname = value;
+				Employee.Surname = value;
 				OnPropertyChanged(nameof(Surname));
 			}
 		}
 
 		public string Patronymic
 		{
-			get => _employee.Patronymic;
+			get => Employee.Patronymic;
 			set
 			{
-				_employee.Patronymic = value;
+				Employee.Patronymic = value;
 				OnPropertyChanged(nameof(Patronymic));
 			}
 		}
 
 		public string DocSeries
 		{
-			get => _employee.DocSeries;
+			get => Employee.DocSeries;
 			set
 			{
-				_employee.DocSeries = value;
+				Employee.DocSeries = value;
 				OnPropertyChanged(nameof(DocSeries));
 			}
 		}
 
 		public string DocNumber
 		{
-			get => _employee.DocNumber;
+			get => Employee.DocNumber;
 			set
 			{
-				_employee.DocNumber = value;
+				Employee.DocNumber = value;
 				OnPropertyChanged(nameof(DocNumber));
 			}
 		}
 
 		public string Position
 		{
-			get => _employee.Position;
+			get => Employee.Position;
 			set
 			{
-				_employee.Position = value;
+				Employee.Position = value;
 				OnPropertyChanged(nameof(Position));
 			}
 		}
 
 		public DateTime DateOfBirth
 		{
-			get => _employee.DateOfBirth;
+			get => Employee.DateOfBirth;
 			set
 			{
-				_employee.DateOfBirth = value;
+				Employee.DateOfBirth = value;
 				OnPropertyChanged(nameof(DateOfBirth));
 			}
 		}
 
-		public int Age => GetAge(_employee.DateOfBirth);
+		public int Age => GetAge(Employee.DateOfBirth);
 
 		public event PropertyChangedEventHandler PropertyChanged;
 

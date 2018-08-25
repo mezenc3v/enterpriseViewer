@@ -42,6 +42,17 @@
 			this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
 			this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
 			this.splitterItem1 = new DevExpress.XtraLayout.SplitterItem();
+			this.bar2 = new DevExpress.XtraBars.Bar();
+			this.bar1 = new DevExpress.XtraBars.Bar();
+			this.bar3 = new DevExpress.XtraBars.Bar();
+			this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
+			this.bar4 = new DevExpress.XtraBars.Bar();
+			this.saveBarButton = new DevExpress.XtraBars.BarButtonItem();
+			this.undoBarButton = new DevExpress.XtraBars.BarButtonItem();
+			this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
+			this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
+			this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
+			this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
 			((System.ComponentModel.ISupportInitialize)(this.departmentsBindingSource)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.employeesBindingSource)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
@@ -53,6 +64,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.splitterItem1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// departmentsBindingSource
@@ -65,23 +77,24 @@
 			// 
 			// layoutControl1
 			// 
+			this.layoutControl1.AllowCustomization = false;
 			this.layoutControl1.Controls.Add(this.panel2);
 			this.layoutControl1.Controls.Add(this.panel1);
 			this.layoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.layoutControl1.Location = new System.Drawing.Point(0, 0);
+			this.layoutControl1.Location = new System.Drawing.Point(0, 29);
 			this.layoutControl1.Name = "layoutControl1";
-			this.layoutControl1.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new System.Drawing.Rectangle(539, 85, 650, 400);
+			this.layoutControl1.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new System.Drawing.Rectangle(539, 86, 650, 400);
 			this.layoutControl1.Root = this.layoutControlGroup1;
-			this.layoutControl1.Size = new System.Drawing.Size(684, 361);
+			this.layoutControl1.Size = new System.Drawing.Size(684, 332);
 			this.layoutControl1.TabIndex = 0;
 			this.layoutControl1.Text = "layoutControl1";
 			// 
 			// panel2
 			// 
 			this.panel2.Controls.Add(this.employeeListBox);
-			this.panel2.Location = new System.Drawing.Point(469, 12);
+			this.panel2.Location = new System.Drawing.Point(471, 7);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(203, 337);
+			this.panel2.Size = new System.Drawing.Size(206, 318);
 			this.panel2.TabIndex = 5;
 			// 
 			// employeeListBox
@@ -92,15 +105,15 @@
 			this.employeeListBox.FormattingEnabled = true;
 			this.employeeListBox.Location = new System.Drawing.Point(0, 0);
 			this.employeeListBox.Name = "employeeListBox";
-			this.employeeListBox.Size = new System.Drawing.Size(203, 337);
+			this.employeeListBox.Size = new System.Drawing.Size(206, 318);
 			this.employeeListBox.TabIndex = 0;
 			// 
 			// panel1
 			// 
 			this.panel1.Controls.Add(this.departmentTreeList);
-			this.panel1.Location = new System.Drawing.Point(12, 12);
+			this.panel1.Location = new System.Drawing.Point(7, 7);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(448, 337);
+			this.panel1.Size = new System.Drawing.Size(455, 318);
 			this.panel1.TabIndex = 4;
 			// 
 			// departmentTreeList
@@ -116,9 +129,11 @@
 			this.departmentTreeList.Name = "departmentTreeList";
 			this.departmentTreeList.OptionsBehavior.EditorShowMode = DevExpress.XtraTreeList.TreeListEditorShowMode.DoubleClick;
 			this.departmentTreeList.ParentFieldName = "ParentId";
-			this.departmentTreeList.Size = new System.Drawing.Size(448, 337);
+			this.departmentTreeList.Size = new System.Drawing.Size(455, 318);
 			this.departmentTreeList.TabIndex = 0;
 			this.departmentTreeList.FocusedNodeChanged += new DevExpress.XtraTreeList.FocusedNodeChangedEventHandler(this.departmentTreeList_FocusedNodeChanged);
+			this.departmentTreeList.InvalidValueException += new DevExpress.XtraEditors.Controls.InvalidValueExceptionEventHandler(this.departmentTreeList_InvalidValueException);
+			this.departmentTreeList.CellValueChanged += new DevExpress.XtraTreeList.CellValueChangedEventHandler(this.departmentTreeList_CellValueChanged);
 			// 
 			// colName
 			// 
@@ -143,7 +158,9 @@
             this.layoutControlItem2,
             this.splitterItem1});
 			this.layoutControlGroup1.Name = "Root";
-			this.layoutControlGroup1.Size = new System.Drawing.Size(684, 361);
+			this.layoutControlGroup1.Padding = new DevExpress.XtraLayout.Utils.Padding(5, 5, 5, 5);
+			this.layoutControlGroup1.ShowInCustomizationForm = false;
+			this.layoutControlGroup1.Size = new System.Drawing.Size(684, 332);
 			this.layoutControlGroup1.TextVisible = false;
 			// 
 			// layoutControlItem1
@@ -152,7 +169,7 @@
 			this.layoutControlItem1.Location = new System.Drawing.Point(0, 0);
 			this.layoutControlItem1.MinSize = new System.Drawing.Size(104, 24);
 			this.layoutControlItem1.Name = "layoutControlItem1";
-			this.layoutControlItem1.Size = new System.Drawing.Size(452, 341);
+			this.layoutControlItem1.Size = new System.Drawing.Size(459, 322);
 			this.layoutControlItem1.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
 			this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
 			this.layoutControlItem1.TextVisible = false;
@@ -160,18 +177,124 @@
 			// layoutControlItem2
 			// 
 			this.layoutControlItem2.Control = this.panel2;
-			this.layoutControlItem2.Location = new System.Drawing.Point(457, 0);
+			this.layoutControlItem2.Location = new System.Drawing.Point(464, 0);
 			this.layoutControlItem2.Name = "layoutControlItem2";
-			this.layoutControlItem2.Size = new System.Drawing.Size(207, 341);
+			this.layoutControlItem2.Size = new System.Drawing.Size(210, 322);
 			this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
 			this.layoutControlItem2.TextVisible = false;
 			// 
 			// splitterItem1
 			// 
 			this.splitterItem1.AllowHotTrack = true;
-			this.splitterItem1.Location = new System.Drawing.Point(452, 0);
+			this.splitterItem1.Location = new System.Drawing.Point(459, 0);
 			this.splitterItem1.Name = "splitterItem1";
-			this.splitterItem1.Size = new System.Drawing.Size(5, 341);
+			this.splitterItem1.Size = new System.Drawing.Size(5, 322);
+			// 
+			// bar2
+			// 
+			this.bar2.BarName = "Main menu";
+			this.bar2.DockCol = 0;
+			this.bar2.DockRow = 0;
+			this.bar2.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
+			this.bar2.OptionsBar.MultiLine = true;
+			this.bar2.OptionsBar.UseWholeRow = true;
+			this.bar2.Text = "Main menu";
+			// 
+			// bar1
+			// 
+			this.bar1.BarName = "Custom 2";
+			this.bar1.DockCol = 0;
+			this.bar1.DockRow = 0;
+			this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
+			this.bar1.Text = "Custom 2";
+			// 
+			// bar3
+			// 
+			this.bar3.BarName = "Custom 2";
+			this.bar3.DockCol = 0;
+			this.bar3.DockRow = 0;
+			this.bar3.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
+			this.bar3.Text = "Custom 2";
+			// 
+			// barManager1
+			// 
+			this.barManager1.AllowQuickCustomization = false;
+			this.barManager1.AllowShowToolbarsPopup = false;
+			this.barManager1.Bars.AddRange(new DevExpress.XtraBars.Bar[] {
+            this.bar4});
+			this.barManager1.DockControls.Add(this.barDockControlTop);
+			this.barManager1.DockControls.Add(this.barDockControlBottom);
+			this.barManager1.DockControls.Add(this.barDockControlLeft);
+			this.barManager1.DockControls.Add(this.barDockControlRight);
+			this.barManager1.Form = this;
+			this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
+            this.saveBarButton,
+            this.undoBarButton});
+			this.barManager1.MaxItemId = 2;
+			// 
+			// bar4
+			// 
+			this.bar4.BarItemVertIndent = 0;
+			this.bar4.BarName = "Tools";
+			this.bar4.DockCol = 0;
+			this.bar4.DockRow = 0;
+			this.bar4.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
+			this.bar4.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.saveBarButton),
+            new DevExpress.XtraBars.LinkPersistInfo(this.undoBarButton)});
+			this.bar4.OptionsBar.AllowQuickCustomization = false;
+			this.bar4.OptionsBar.DrawBorder = false;
+			this.bar4.Text = "Tools";
+			// 
+			// saveBarButton
+			// 
+			this.saveBarButton.Caption = "Save";
+			this.saveBarButton.Enabled = false;
+			this.saveBarButton.Id = 0;
+			this.saveBarButton.ImageOptions.ImageUri.Uri = "Save";
+			this.saveBarButton.Name = "saveBarButton";
+			this.saveBarButton.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.saveBarButton_ItemClick);
+			// 
+			// undoBarButton
+			// 
+			this.undoBarButton.Caption = "Undo";
+			this.undoBarButton.Enabled = false;
+			this.undoBarButton.Id = 1;
+			this.undoBarButton.ImageOptions.ImageUri.Uri = "Undo";
+			this.undoBarButton.Name = "undoBarButton";
+			this.undoBarButton.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.undoBarButton_ItemClick);
+			// 
+			// barDockControlTop
+			// 
+			this.barDockControlTop.CausesValidation = false;
+			this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
+			this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
+			this.barDockControlTop.Manager = this.barManager1;
+			this.barDockControlTop.Size = new System.Drawing.Size(684, 29);
+			// 
+			// barDockControlBottom
+			// 
+			this.barDockControlBottom.CausesValidation = false;
+			this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.barDockControlBottom.Location = new System.Drawing.Point(0, 361);
+			this.barDockControlBottom.Manager = this.barManager1;
+			this.barDockControlBottom.Size = new System.Drawing.Size(684, 0);
+			// 
+			// barDockControlLeft
+			// 
+			this.barDockControlLeft.CausesValidation = false;
+			this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
+			this.barDockControlLeft.Location = new System.Drawing.Point(0, 29);
+			this.barDockControlLeft.Manager = this.barManager1;
+			this.barDockControlLeft.Size = new System.Drawing.Size(0, 332);
+			// 
+			// barDockControlRight
+			// 
+			this.barDockControlRight.CausesValidation = false;
+			this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
+			this.barDockControlRight.Location = new System.Drawing.Point(684, 29);
+			this.barDockControlRight.Manager = this.barManager1;
+			this.barDockControlRight.Size = new System.Drawing.Size(0, 332);
 			// 
 			// StartForm
 			// 
@@ -179,6 +302,10 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(684, 361);
 			this.Controls.Add(this.layoutControl1);
+			this.Controls.Add(this.barDockControlLeft);
+			this.Controls.Add(this.barDockControlRight);
+			this.Controls.Add(this.barDockControlBottom);
+			this.Controls.Add(this.barDockControlTop);
 			this.Name = "StartForm";
 			this.Text = "Enterprise viewer";
 			((System.ComponentModel.ISupportInitialize)(this.departmentsBindingSource)).EndInit();
@@ -192,7 +319,9 @@
 			((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.splitterItem1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -211,6 +340,17 @@
 		private DevExpress.XtraLayout.SplitterItem splitterItem1;
 		private DevExpress.XtraTreeList.Columns.TreeListColumn colName;
 		private DevExpress.XtraTreeList.Columns.TreeListColumn colCode;
+		private DevExpress.XtraBars.Bar bar2;
+		private DevExpress.XtraBars.Bar bar1;
+		private DevExpress.XtraBars.Bar bar3;
+		private DevExpress.XtraBars.BarManager barManager1;
+		private DevExpress.XtraBars.Bar bar4;
+		private DevExpress.XtraBars.BarButtonItem saveBarButton;
+		private DevExpress.XtraBars.BarDockControl barDockControlTop;
+		private DevExpress.XtraBars.BarDockControl barDockControlBottom;
+		private DevExpress.XtraBars.BarDockControl barDockControlLeft;
+		private DevExpress.XtraBars.BarDockControl barDockControlRight;
+		private DevExpress.XtraBars.BarButtonItem undoBarButton;
 	}
 }
 

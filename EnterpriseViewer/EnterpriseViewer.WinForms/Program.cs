@@ -13,12 +13,12 @@ namespace EnterpriseViewer.WinForms
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			var unitOfWork = UnitOfWorkFactory.CreateUnitOfWork();
-			var controller = new Controller(unitOfWork);
-			var departments = controller.GetDepartments();
-			var form = new StartForm();
-			form.SetDepartments(departments);
-			Application.Run(form);
+			using (var unitOfWork = UnitOfWorkFactory.CreateUnitOfWork())
+			{
+				var controller = new Controller(unitOfWork);
+				var form = new StartForm(controller);
+				Application.Run(form);
+			}
 		}
 	}
 }

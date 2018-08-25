@@ -1,7 +1,6 @@
 ﻿using System.Configuration;
 using EnterpriseViewer.Data;
 using EnterpriseViewer.Data.Sql;
-using EnterpriseViewer.Model;
 
 namespace EnterpriseViewer.WinForms
 {

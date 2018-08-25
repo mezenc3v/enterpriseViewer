@@ -30,23 +30,26 @@ namespace EnterpriseViewer.Data.Sql
 			if (_transaction != null)
 			{
 				_transaction.Commit();
-				_transaction = null;
+				_transaction = _connection?.BeginTransaction();
 			}
+		}
+
+		public void Undo()
+		{
+			_transaction?.Rollback();
+			_transaction = _connection?.BeginTransaction();
 		}
 
 		public void Dispose()
 		{
-			if (_transaction != null)
-			{
-				_transaction.Rollback();
-				_transaction = null;
-			}
+			_transaction?.Rollback();
 
 			if (_connection != null && _ownsConnection)
 			{
 				_connection.Close();
-				_connection = null;
 			}
+			_transaction = null;
+			_connection = null;
 		}
 	}
 }
