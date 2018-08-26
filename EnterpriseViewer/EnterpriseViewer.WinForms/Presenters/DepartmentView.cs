@@ -7,7 +7,7 @@ namespace EnterpriseViewer.WinForms.Presenters
 {
 	public class DepartmentView : INotifyPropertyChanged
 	{
-		public DepartmentView(Department department, IEnumerable<EmployeeView> employees)
+		public DepartmentView(Department department, List<EmployeeView> employees)
 		{
 			Department = department ?? throw new ArgumentNullException(nameof(department));
 			Employees = employees ?? throw new ArgumentNullException(nameof(employees));
@@ -15,7 +15,7 @@ namespace EnterpriseViewer.WinForms.Presenters
 
 		public Department Department { get; }
 
-		public IEnumerable<EmployeeView> Employees { get; }
+		public List<EmployeeView> Employees { get; }
 
 		public Guid Id => Department.Id;
 

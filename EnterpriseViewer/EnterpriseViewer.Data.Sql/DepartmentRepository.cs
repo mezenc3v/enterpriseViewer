@@ -66,7 +66,7 @@ namespace EnterpriseViewer.Data.Sql
 					cmd.Parameters.AddWithValue("@ID", newDepartment.Id);
 					cmd.Parameters.AddWithValue("@Name", newDepartment.Name);
 					cmd.Parameters.AddWithNullValue("@Code", newDepartment.Code);
-					cmd.Parameters.AddWithValue("@ParentDepartmentID", newDepartment.ParentId);
+					cmd.Parameters.AddWithNullValue("@ParentDepartmentID", newDepartment.ParentId);
 					cmd.ExecuteNonQuery();
 				}
 				return newDepartment;
@@ -116,7 +116,18 @@ namespace EnterpriseViewer.Data.Sql
 			{
 				using (var cmd = _context.CreateCommand())
 				{
-					cmd.CommandText = "delete from Department where ID = @departmentId";
+					const string cteCommand = @"WITH RowsToDelete AS (
+													select ID
+													from Department
+													where ID = @departmentId
+													union all
+													select ch.ID
+													from Department ch inner join RowsToDelete p
+													on p.ID = ch.ParentDepartmentID)";
+					cmd.CommandText += cteCommand;
+					cmd.CommandText += @"delete from Empoyee where DepartmentID in (select ID from RowsToDelete);";
+					cmd.CommandText += cteCommand;
+					cmd.CommandText += "delete from Department where ID in (select ID from RowsToDelete);";
 					cmd.Parameters.AddWithValue("@departmentId", departmentId);
 					cmd.ExecuteNonQuery();
 				}

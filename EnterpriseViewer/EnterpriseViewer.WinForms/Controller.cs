@@ -4,6 +4,7 @@ using System.Linq;
 using EnterpriseViewer.Data;
 using System.ComponentModel;
 using System.Collections.Generic;
+using DevExpress.Utils.Extensions;
 using EnterpriseViewer.Model;
 using EnterpriseViewer.WinForms.Annotations;
 using EnterpriseViewer.WinForms.Presenters;
@@ -55,11 +56,9 @@ namespace EnterpriseViewer.WinForms
 			_departmentViews = null;
 		}
 
-		public DepartmentView AddNewDepartment([NotNull] DepartmentView parent)
+		public DepartmentView AddNewDepartment(DepartmentView parent)
 		{
-			if (parent == null) throw new ArgumentNullException(nameof(parent));
-
-			var newDep = NewDepartment(parent.Department);
+			var newDep = NewDepartment(parent?.Department);
 			var newDepView = new DepartmentView(newDep, new List<EmployeeView>());
 			_departmentViews.Add(newDepView);
 			return newDepView;
@@ -69,7 +68,23 @@ namespace EnterpriseViewer.WinForms
 		{
 			if (department == null) throw new ArgumentNullException(nameof(department));
 			_unitOfWork.DepartmentRepository.DeleteDepartment(department.Id);
-			_departmentViews.Remove(department);
+			_departmentViews = null;
+		}
+
+		public EmployeeView AddNewEmployee([NotNull] DepartmentView depView)
+		{
+			if (depView == null) throw new ArgumentNullException(nameof(depView));
+			var newEmployee = NewEmployee(depView.Department);
+			var newEmpView = new EmployeeView(newEmployee);
+			depView.Employees.Add(newEmpView);
+			return newEmpView;
+		}
+
+		public void DeleteEmployee([NotNull] EmployeeView employee)
+		{
+			if (employee == null) throw new ArgumentNullException(nameof(employee));
+			_unitOfWork.EmployeeRepository.DeleteEmployee(employee.Id);
+			_departmentViews.Where(d => d.Employees.Contains(employee)).ForEach(d => d.Employees.Remove(employee));
 		}
 
 		private Department NewDepartment(Department parent)
@@ -82,6 +97,20 @@ namespace EnterpriseViewer.WinForms
 			};
 			var dep = _unitOfWork.DepartmentRepository.AddDepartment(newDep);
 			return dep;
+		}
+
+		private Employee NewEmployee(Department department)
+		{
+			var newEmp = new Employee
+			{
+				DepartmentId = department.Id,
+				Surname = "Surname",
+				FirstName = "FirstName",
+				DateOfBirth = DateTime.Now,
+				Position = "Position"
+			};
+			var emp = _unitOfWork.EmployeeRepository.AddEmployee(newEmp);
+			return emp;
 		}
 
 		private void PropertyChangedHandler(object sender, PropertyChangedEventArgs args)

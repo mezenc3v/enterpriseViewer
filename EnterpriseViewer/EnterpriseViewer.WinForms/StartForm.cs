@@ -20,6 +20,10 @@ namespace EnterpriseViewer.WinForms
 
 		private void departmentTreeList_FocusedNodeChanged(object sender, DevExpress.XtraTreeList.FocusedNodeChangedEventArgs e)
 		{
+			var focusedNode = GetFocusedDepView();
+			deleteDepBarButton.Enabled = focusedNode != null;
+			deleteEmpBarBtn.Enabled = focusedNode != null;
+			addEmpBarBtn.Enabled = focusedNode != null;
 			UpdateEmployeesDataSource();
 		}
 
@@ -51,7 +55,7 @@ namespace EnterpriseViewer.WinForms
 
 		private void PropertyChangedHandler(object sender, PropertyChangedEventArgs args)
 		{
-			EnableSaveAndUndoBtns();
+			EnableSaveAndUndoDepBtns();
 		}
 
 		private void StartForm_KeyDown(object sender, KeyEventArgs e)
@@ -67,15 +71,41 @@ namespace EnterpriseViewer.WinForms
 			var dep = GetFocusedDepView();
 			_controller.AddNewDepartment(dep);
 			departmentTreeList.RefreshDataSource();
-			EnableSaveAndUndoBtns();
+			EnableSaveAndUndoDepBtns();
 		}
 
 		private void deleteBarButton_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
 		{
 			var dep = GetFocusedDepView();
 			_controller.DeleteDepartment(dep);
+			UpdateDepartmentsDataSource();
 			departmentTreeList.RefreshDataSource();
-			EnableSaveAndUndoBtns();
+			EnableSaveAndUndoDepBtns();
+		}
+
+		private void addEmpBarBtn_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			var dep = GetFocusedDepView();
+			_controller.AddNewEmployee(dep);
+			employeeListBoxControl.Refresh();
+			EnableSaveAndUndoDepBtns();
+		}
+
+		private void deleteEmpBarBtn_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			if (employeeListBoxControl.SelectedItem is EmployeeView employeeView)
+			{
+				var prevIndex = GetPrevEmployeeIndex();
+				_controller.DeleteEmployee(employeeView);
+				employeeListBoxControl.Refresh();
+				employeeListBoxControl.SelectedIndex = prevIndex;
+				EnableSaveAndUndoDepBtns();
+			}
+		}
+
+		private void employeeListBoxControl_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			deleteEmpBarBtn.Enabled = employeeListBoxControl.SelectedIndex != -1;
 		}
 
 		private void UpdateDepartmentsDataSource()
@@ -91,32 +121,41 @@ namespace EnterpriseViewer.WinForms
 
 		private DepartmentView GetFocusedDepView()
 		{
-		   return departmentTreeList.GetFocusedRow() as DepartmentView;
+			return departmentTreeList.GetFocusedRow() as DepartmentView;
 		}
 
 		private void SaveChanges()
 		{
 			_controller.SaveChanges();
-			DisableSaveAndUndoBtns();
+			DisableSaveAndUndoDepBtns();
 		}
 
 		private void UndoChanges()
 		{
 			_controller.Undo();
-			DisableSaveAndUndoBtns();
+			DisableSaveAndUndoDepBtns();
 			UpdateEmployeesDataSource();
 		}
 
-		private void DisableSaveAndUndoBtns()
+		private void DisableSaveAndUndoDepBtns()
 		{
 			saveBarButton.Enabled = false;
 			undoBarButton.Enabled = false;
 		}
 
-		private void EnableSaveAndUndoBtns()
+		private void EnableSaveAndUndoDepBtns()
 		{
 			saveBarButton.Enabled = true;
 			undoBarButton.Enabled = true;
+		}
+
+		private int GetPrevEmployeeIndex()
+		{
+			var prevIndex = employeeListBoxControl.SelectedIndex - 1;
+			if (prevIndex == -1)
+				prevIndex = 0;
+
+			return prevIndex;
 		}
 	}
 }
