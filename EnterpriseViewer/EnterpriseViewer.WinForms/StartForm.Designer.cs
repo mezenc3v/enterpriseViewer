@@ -53,6 +53,8 @@
 			this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
 			this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
 			this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
+			this.addBarButton = new DevExpress.XtraBars.BarButtonItem();
+			this.deleteBarButton = new DevExpress.XtraBars.BarButtonItem();
 			((System.ComponentModel.ISupportInitialize)(this.departmentsBindingSource)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.employeesBindingSource)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
@@ -229,8 +231,10 @@
 			this.barManager1.Form = this;
 			this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.saveBarButton,
-            this.undoBarButton});
-			this.barManager1.MaxItemId = 2;
+            this.undoBarButton,
+            this.addBarButton,
+            this.deleteBarButton});
+			this.barManager1.MaxItemId = 4;
 			// 
 			// bar4
 			// 
@@ -241,7 +245,9 @@
 			this.bar4.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
 			this.bar4.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.saveBarButton),
-            new DevExpress.XtraBars.LinkPersistInfo(this.undoBarButton)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.undoBarButton),
+            new DevExpress.XtraBars.LinkPersistInfo(this.addBarButton),
+            new DevExpress.XtraBars.LinkPersistInfo(this.deleteBarButton)});
 			this.bar4.OptionsBar.AllowQuickCustomization = false;
 			this.bar4.OptionsBar.DrawBorder = false;
 			this.bar4.Text = "Tools";
@@ -295,6 +301,22 @@
 			this.barDockControlRight.Location = new System.Drawing.Point(684, 29);
 			this.barDockControlRight.Manager = this.barManager1;
 			this.barDockControlRight.Size = new System.Drawing.Size(0, 332);
+			// 
+			// addBarButton
+			// 
+			this.addBarButton.Caption = "Add";
+			this.addBarButton.Id = 2;
+			this.addBarButton.ImageOptions.ImageUri.Uri = "Add";
+			this.addBarButton.Name = "addBarButton";
+			this.addBarButton.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.addBarButton_ItemClick);
+			// 
+			// deleteBarButton
+			// 
+			this.deleteBarButton.Caption = "Delete";
+			this.deleteBarButton.Id = 3;
+			this.deleteBarButton.ImageOptions.ImageUri.Uri = "Delete";
+			this.deleteBarButton.Name = "deleteBarButton";
+			this.deleteBarButton.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.deleteBarButton_ItemClick);
 			// 
 			// StartForm
 			// 
@@ -354,6 +376,8 @@
 		private DevExpress.XtraBars.BarDockControl barDockControlRight;
 		private DevExpress.XtraBars.BarButtonItem undoBarButton;
 		private DevExpress.XtraEditors.ListBoxControl employeeListBoxControl;
+		private DevExpress.XtraBars.BarButtonItem addBarButton;
+		private DevExpress.XtraBars.BarButtonItem deleteBarButton;
 	}
 }
 

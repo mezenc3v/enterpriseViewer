@@ -45,14 +45,13 @@ namespace EnterpriseViewer.WinForms
 			if (employeeListBoxControl.SelectedItem is EmployeeView employeeView)
 			{
 				var employeeForm = new EmployeeEditor(employeeView);
-				employeeForm.Show(this);
+				employeeForm.ShowDialog(this);
 			}
 		}
 
 		private void PropertyChangedHandler(object sender, PropertyChangedEventArgs args)
 		{
-			saveBarButton.Enabled = true;
-			undoBarButton.Enabled = true;
+			EnableSaveAndUndoBtns();
 		}
 
 		private void StartForm_KeyDown(object sender, KeyEventArgs e)
@@ -63,6 +62,22 @@ namespace EnterpriseViewer.WinForms
 			}
 		}
 
+		private void addBarButton_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			var dep = GetFocusedDepView();
+			_controller.AddNewDepartment(dep);
+			departmentTreeList.RefreshDataSource();
+			EnableSaveAndUndoBtns();
+		}
+
+		private void deleteBarButton_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			var dep = GetFocusedDepView();
+			_controller.DeleteDepartment(dep);
+			departmentTreeList.RefreshDataSource();
+			EnableSaveAndUndoBtns();
+		}
+
 		private void UpdateDepartmentsDataSource()
 		{
 			departmentsBindingSource.DataSource = _controller.Departments;
@@ -70,22 +85,38 @@ namespace EnterpriseViewer.WinForms
 
 		private void UpdateEmployeesDataSource()
 		{
-			var dep = departmentTreeList.GetFocusedRow() as DepartmentView;
+			var dep = GetFocusedDepView();
 			employeesBindingSource.DataSource = dep?.Employees;
+		}
+
+		private DepartmentView GetFocusedDepView()
+		{
+		   return departmentTreeList.GetFocusedRow() as DepartmentView;
 		}
 
 		private void SaveChanges()
 		{
 			_controller.SaveChanges();
-			saveBarButton.Enabled = false;
-			undoBarButton.Enabled = false;
+			DisableSaveAndUndoBtns();
 		}
 
 		private void UndoChanges()
 		{
 			_controller.Undo();
+			DisableSaveAndUndoBtns();
+			UpdateEmployeesDataSource();
+		}
+
+		private void DisableSaveAndUndoBtns()
+		{
 			saveBarButton.Enabled = false;
 			undoBarButton.Enabled = false;
+		}
+
+		private void EnableSaveAndUndoBtns()
+		{
+			saveBarButton.Enabled = true;
+			undoBarButton.Enabled = true;
 		}
 	}
 }

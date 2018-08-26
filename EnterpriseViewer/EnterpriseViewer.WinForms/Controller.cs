@@ -4,6 +4,7 @@ using System.Linq;
 using EnterpriseViewer.Data;
 using System.ComponentModel;
 using System.Collections.Generic;
+using EnterpriseViewer.Model;
 using EnterpriseViewer.WinForms.Annotations;
 using EnterpriseViewer.WinForms.Presenters;
 
@@ -13,7 +14,7 @@ namespace EnterpriseViewer.WinForms
 	{
 		private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 		private readonly IUnitOfWork _unitOfWork;
-		private IEnumerable<DepartmentView> _departmentViews;
+		private List<DepartmentView> _departmentViews;
 		public IEnumerable<DepartmentView> Departments => _departmentViews ?? (_departmentViews = GetDepartments());
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -22,7 +23,7 @@ namespace EnterpriseViewer.WinForms
 			_unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
 		}
 
-		private IEnumerable<DepartmentView> GetDepartments()
+		private List<DepartmentView> GetDepartments()
 		{
 			var depViews = new List<DepartmentView>();
 			var departments = _unitOfWork.DepartmentRepository.GetAllDepartments();
@@ -52,6 +53,35 @@ namespace EnterpriseViewer.WinForms
 		{
 			_unitOfWork.Undo();
 			_departmentViews = null;
+		}
+
+		public DepartmentView AddNewDepartment([NotNull] DepartmentView parent)
+		{
+			if (parent == null) throw new ArgumentNullException(nameof(parent));
+
+			var newDep = NewDepartment(parent.Department);
+			var newDepView = new DepartmentView(newDep, new List<EmployeeView>());
+			_departmentViews.Add(newDepView);
+			return newDepView;
+		}
+
+		public void DeleteDepartment([NotNull] DepartmentView department)
+		{
+			if (department == null) throw new ArgumentNullException(nameof(department));
+			_unitOfWork.DepartmentRepository.DeleteDepartment(department.Id);
+			_departmentViews.Remove(department);
+		}
+
+		private Department NewDepartment(Department parent)
+		{
+			var newDep = new Department
+			{
+				Id = Guid.NewGuid(),
+				Name = "New department",
+				ParentId = parent?.Id
+			};
+			var dep = _unitOfWork.DepartmentRepository.AddDepartment(newDep);
+			return dep;
 		}
 
 		private void PropertyChangedHandler(object sender, PropertyChangedEventArgs args)
