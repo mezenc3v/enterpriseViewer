@@ -9,12 +9,13 @@ using EnterpriseViewer.WinForms.Presenters;
 
 namespace EnterpriseViewer.WinForms
 {
-	public class Controller
+	public class Controller : INotifyPropertyChanged
 	{
 		private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 		private readonly IUnitOfWork _unitOfWork;
 		private IEnumerable<DepartmentView> _departmentViews;
 		public IEnumerable<DepartmentView> Departments => _departmentViews ?? (_departmentViews = GetDepartments());
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		public Controller([NotNull] IUnitOfWork unitOfWork)
 		{
@@ -55,6 +56,7 @@ namespace EnterpriseViewer.WinForms
 
 		private void PropertyChangedHandler(object sender, PropertyChangedEventArgs args)
 		{
+			PropertyChanged?.Invoke(sender, args);
 			switch (sender)
 			{
 				case EmployeeView emp:

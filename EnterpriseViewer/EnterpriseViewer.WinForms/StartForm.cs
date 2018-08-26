@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using EnterpriseViewer.WinForms.Annotations;
 using EnterpriseViewer.WinForms.Presenters;
@@ -13,39 +14,78 @@ namespace EnterpriseViewer.WinForms
 		{
 			_controller = controller ?? throw new ArgumentNullException(nameof(controller));
 			InitializeComponent();
-			departmentsBindingSource.DataSource = _controller.Departments;
+			_controller.PropertyChanged += PropertyChangedHandler;
+			UpdateDepartmentsDataSource();
 		}
 
 		private void departmentTreeList_FocusedNodeChanged(object sender, DevExpress.XtraTreeList.FocusedNodeChangedEventArgs e)
 		{
-			var dep = departmentTreeList.GetDataRecordByNode(e.Node) as DepartmentView;
-			employeesBindingSource.DataSource = dep?.Employees;
+			UpdateEmployeesDataSource();
 		}
 
-		private void departmentTreeList_CellValueChanged(object sender, DevExpress.XtraTreeList.CellValueChangedEventArgs e)
+		private void saveBarButton_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			SaveChanges();
+		}
+
+		private void undoBarButton_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			UndoChanges();
+			UpdateDepartmentsDataSource();
+			UpdateEmployeesDataSource();
+		}
+
+		private void departmentTreeList_InvalidValueException(object sender, DevExpress.XtraEditors.Controls.InvalidValueExceptionEventArgs e)
+		{
+			saveBarButton.Enabled = false;
+		}
+
+		private void employeeListBoxControl_DoubleClick(object sender, EventArgs e)
+		{
+			if (employeeListBoxControl.SelectedItem is EmployeeView employeeView)
+			{
+				var employeeForm = new EmployeeEditor(employeeView);
+				employeeForm.Show(this);
+			}
+		}
+
+		private void PropertyChangedHandler(object sender, PropertyChangedEventArgs args)
 		{
 			saveBarButton.Enabled = true;
 			undoBarButton.Enabled = true;
 		}
 
-		private void saveBarButton_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		private void StartForm_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Control && e.KeyCode == Keys.S)
+			{
+				SaveChanges();
+			}
+		}
+
+		private void UpdateDepartmentsDataSource()
+		{
+			departmentsBindingSource.DataSource = _controller.Departments;
+		}
+
+		private void UpdateEmployeesDataSource()
+		{
+			var dep = departmentTreeList.GetFocusedRow() as DepartmentView;
+			employeesBindingSource.DataSource = dep?.Employees;
+		}
+
+		private void SaveChanges()
 		{
 			_controller.SaveChanges();
 			saveBarButton.Enabled = false;
 			undoBarButton.Enabled = false;
 		}
 
-		private void undoBarButton_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		private void UndoChanges()
 		{
 			_controller.Undo();
-			departmentsBindingSource.DataSource = _controller.Departments;
 			saveBarButton.Enabled = false;
 			undoBarButton.Enabled = false;
-		}
-
-		private void departmentTreeList_InvalidValueException(object sender, DevExpress.XtraEditors.Controls.InvalidValueExceptionEventArgs e)
-		{
-			saveBarButton.Enabled = false;
 		}
 	}
 }

@@ -33,7 +33,7 @@
 			this.employeesBindingSource = new System.Windows.Forms.BindingSource(this.components);
 			this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
 			this.panel2 = new System.Windows.Forms.Panel();
-			this.employeeListBox = new System.Windows.Forms.ListBox();
+			this.employeeListBoxControl = new DevExpress.XtraEditors.ListBoxControl();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.departmentTreeList = new DevExpress.XtraTreeList.TreeList();
 			this.colName = new DevExpress.XtraTreeList.Columns.TreeListColumn();
@@ -58,6 +58,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
 			this.layoutControl1.SuspendLayout();
 			this.panel2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.employeeListBoxControl)).BeginInit();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.departmentTreeList)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
@@ -91,22 +92,22 @@
 			// 
 			// panel2
 			// 
-			this.panel2.Controls.Add(this.employeeListBox);
+			this.panel2.Controls.Add(this.employeeListBoxControl);
 			this.panel2.Location = new System.Drawing.Point(471, 7);
 			this.panel2.Name = "panel2";
 			this.panel2.Size = new System.Drawing.Size(206, 318);
 			this.panel2.TabIndex = 5;
 			// 
-			// employeeListBox
+			// employeeListBoxControl
 			// 
-			this.employeeListBox.DataSource = this.employeesBindingSource;
-			this.employeeListBox.DisplayMember = "FullName";
-			this.employeeListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.employeeListBox.FormattingEnabled = true;
-			this.employeeListBox.Location = new System.Drawing.Point(0, 0);
-			this.employeeListBox.Name = "employeeListBox";
-			this.employeeListBox.Size = new System.Drawing.Size(206, 318);
-			this.employeeListBox.TabIndex = 0;
+			this.employeeListBoxControl.DataSource = this.employeesBindingSource;
+			this.employeeListBoxControl.DisplayMember = "FullName";
+			this.employeeListBoxControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.employeeListBoxControl.Location = new System.Drawing.Point(0, 0);
+			this.employeeListBoxControl.Name = "employeeListBoxControl";
+			this.employeeListBoxControl.Size = new System.Drawing.Size(206, 318);
+			this.employeeListBoxControl.TabIndex = 0;
+			this.employeeListBoxControl.DoubleClick += new System.EventHandler(this.employeeListBoxControl_DoubleClick);
 			// 
 			// panel1
 			// 
@@ -133,7 +134,6 @@
 			this.departmentTreeList.TabIndex = 0;
 			this.departmentTreeList.FocusedNodeChanged += new DevExpress.XtraTreeList.FocusedNodeChangedEventHandler(this.departmentTreeList_FocusedNodeChanged);
 			this.departmentTreeList.InvalidValueException += new DevExpress.XtraEditors.Controls.InvalidValueExceptionEventHandler(this.departmentTreeList_InvalidValueException);
-			this.departmentTreeList.CellValueChanged += new DevExpress.XtraTreeList.CellValueChangedEventHandler(this.departmentTreeList_CellValueChanged);
 			// 
 			// colName
 			// 
@@ -306,13 +306,16 @@
 			this.Controls.Add(this.barDockControlRight);
 			this.Controls.Add(this.barDockControlBottom);
 			this.Controls.Add(this.barDockControlTop);
+			this.KeyPreview = true;
 			this.Name = "StartForm";
 			this.Text = "Enterprise viewer";
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.StartForm_KeyDown);
 			((System.ComponentModel.ISupportInitialize)(this.departmentsBindingSource)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.employeesBindingSource)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).EndInit();
 			this.layoutControl1.ResumeLayout(false);
 			this.panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.employeeListBoxControl)).EndInit();
 			this.panel1.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.departmentTreeList)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
@@ -332,7 +335,6 @@
 		private DevExpress.XtraLayout.LayoutControl layoutControl1;
 		private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup1;
 		private System.Windows.Forms.Panel panel2;
-		private System.Windows.Forms.ListBox employeeListBox;
 		private System.Windows.Forms.Panel panel1;
 		private DevExpress.XtraTreeList.TreeList departmentTreeList;
 		private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;
@@ -351,6 +353,7 @@
 		private DevExpress.XtraBars.BarDockControl barDockControlLeft;
 		private DevExpress.XtraBars.BarDockControl barDockControlRight;
 		private DevExpress.XtraBars.BarButtonItem undoBarButton;
+		private DevExpress.XtraEditors.ListBoxControl employeeListBoxControl;
 	}
 }
 

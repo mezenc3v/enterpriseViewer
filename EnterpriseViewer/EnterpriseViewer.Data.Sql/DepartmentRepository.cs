@@ -65,7 +65,7 @@ namespace EnterpriseViewer.Data.Sql
 					cmd.CommandText = @"insert into Department values (@ID,@Name,@Code,@ParentDepartmentID);";
 					cmd.Parameters.AddWithValue("@ID", newDepartment.Id);
 					cmd.Parameters.AddWithValue("@Name", newDepartment.Name);
-					cmd.Parameters.AddWithValue("@Code", newDepartment.Code);
+					cmd.Parameters.AddWithNullValue("@Code", newDepartment.Code);
 					cmd.Parameters.AddWithValue("@ParentDepartmentID", newDepartment.ParentId);
 					cmd.ExecuteNonQuery();
 				}
@@ -136,7 +136,7 @@ namespace EnterpriseViewer.Data.Sql
 				{
 					cmd.CommandText = "update Department set Name = @Name, Code = @Code, ParentDepartmentID = @ParentDepartmentID from Department where ID = @departmentId;";
 					cmd.Parameters.AddWithValue("@Name", department.Name);
-					cmd.Parameters.AddWithValue("@Code", department.Code);
+					cmd.Parameters.AddWithNullValue("@Code", department.Code);
 					cmd.Parameters.AddWithValue("@departmentId", department.Id);
 					cmd.Parameters.AddWithValue("@ParentDepartmentID", department.ParentId);
 					cmd.ExecuteNonQuery();

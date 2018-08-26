@@ -87,7 +87,7 @@ namespace EnterpriseViewer.WinForms.Presenters
 			}
 		}
 
-		public int Age => GetAge(Employee.DateOfBirth);
+		public string Age => $"{GetAge(Employee.DateOfBirth)} years old";
 
 		public event PropertyChangedEventHandler PropertyChanged;
 

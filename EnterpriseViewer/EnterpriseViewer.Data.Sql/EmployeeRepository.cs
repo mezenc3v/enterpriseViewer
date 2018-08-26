@@ -37,10 +37,10 @@ namespace EnterpriseViewer.Data.Sql
 					cmd.Parameters.Add("@ID", SqlDbType.Int, 5).Direction = ParameterDirection.Output;
 					cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
 					cmd.Parameters.AddWithValue("@SurName", employee.Surname);
-					cmd.Parameters.AddWithValue("@Patronymic", employee.Patronymic);
+					cmd.Parameters.AddWithNullValue("@Patronymic", employee.Patronymic);
 					cmd.Parameters.AddWithValue("@DateOfBirth", employee.DateOfBirth);
-					cmd.Parameters.AddWithValue("@DocSeries", employee.DocSeries);
-					cmd.Parameters.AddWithValue("@DocNumber", employee.DocNumber);
+					cmd.Parameters.AddWithNullValue("@DocSeries", employee.DocSeries);
+					cmd.Parameters.AddWithNullValue("@DocNumber", employee.DocNumber);
 					cmd.Parameters.AddWithValue("Position", employee.Position);
 					cmd.Parameters.AddWithValue("@DepartmentID", employee.DepartmentId);
 					cmd.ExecuteNonQuery();
@@ -120,10 +120,10 @@ namespace EnterpriseViewer.Data.Sql
 					cmd.CommandText = "update Empoyee set FirstName = @FirstName, SurName = @SurName, Patronymic = @Patronymic, DateOfBirth = @DateOfBirth, DocSeries = @DocSeries, DocNumber = @DocNumber, Position = @Position, DepartmentID = @DepartmentID from Empoyee where ID = @employeeId;";
 					cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
 					cmd.Parameters.AddWithValue("@SurName", employee.Surname);
-					cmd.Parameters.AddWithValue("@Patronymic", employee.Patronymic);
+					cmd.Parameters.AddWithNullValue("@Patronymic", employee.Patronymic);
 					cmd.Parameters.AddWithValue("@DateOfBirth", employee.DateOfBirth);
-					cmd.Parameters.AddWithValue("@DocSeries", employee.DocSeries);
-					cmd.Parameters.AddWithValue("@DocNumber", employee.DocNumber);
+					cmd.Parameters.AddWithNullValue("@DocSeries", employee.DocSeries);
+					cmd.Parameters.AddWithNullValue("@DocNumber", employee.DocNumber);
 					cmd.Parameters.AddWithValue("@Position", employee.Position);
 					cmd.Parameters.AddWithValue("@DepartmentID", employee.DepartmentId);
 					cmd.Parameters.AddWithValue("@employeeId", employee.Id);
